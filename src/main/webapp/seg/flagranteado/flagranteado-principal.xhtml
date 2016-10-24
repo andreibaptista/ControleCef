@@ -1,0 +1,223 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:cf="http://cf.com.br/tags">
+
+
+	<ui:define name="conteudo">
+		
+		<!-- BreadCrumb -->
+			<h:form id="formBreadcrumb">
+				<div class="crumbs">
+					<ul id="breadcrumbs" class="breadcrumb">
+						<li><p:commandLink action="#{redirect.indexSeguranca()}"
+								ajax="false" immediate="true">
+								<h:outputText value="#{msg['view.home']}" />
+							</p:commandLink></li>
+						<li class="active"><p:commandLink ajax="false"
+								immediate="true" style="cursor:default;">
+								<h:outputText value="#{msg['view.flagranteado.principal']}" />
+							</p:commandLink></li>
+					</ul>
+				</div>
+			</h:form>
+		<!--/BreadCrumb -->
+		
+		
+		<!-- GRADE DE PESQUISA -->
+		<h:form id="formPesquisa">
+			<cf:title titleValue="#{msg['view.flagranteado.principal']}" />
+				<cf:mensagens globalOnly="true" />
+	
+				<p:panel styleClass="headerPanel">
+					<p:outputLabel value="#{msg['view.flagranteado.principal.panel.search.header']}" />
+				</p:panel>
+				<p:panel styleClass="contentPanel">
+					<h:panelGrid columns="2" columnClasses="textRight,textLeft"> 
+						<p:outputLabel value="#{msg['view.flagranteado.principal.label.nome']}" styleClass="negrito" />
+						<p:inputText  size="80" maxlength="50" value="#{flagranteadoControl.nome}" />
+					</h:panelGrid>
+				</p:panel>
+				<p:panel styleClass="buttonPanel">
+					<p:commandButton icon="fa fa-lg fa-search"
+										value="#{msg['view.button.search']}"
+										title="#{msg['view.button.search']}" styleClass="btn btn-info"
+										update=":formPesq" actionListener="#{flagranteadoControl.pesquisar}" />
+					<p:commandButton icon="fa fa-lg fa-eraser"
+										value="#{msg['view.button.clean']}"
+										title="#{msg['view.button.clean']}" styleClass="btn" update=":formPesquisa"
+										actionListener="#{flagranteadoControl.limpar}" />
+				</p:panel>
+			</h:form>
+		
+		<!-- GRADE DE PESQUISA -->
+		
+		
+		
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+		<h:form styleClass="form-horizontal" id="formPesq">
+			<p:dataTable id="tableVar" var="var"
+							value="#{flagranteadoControl.flagranteadoList}" paginator="true" rows="10"
+							rowKey="#{var.idFlagranteado}"
+							selection="#{flagranteadoControl.bean}"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+							selectionMode="single" emptyMessage="#{msg['view.table.empty']}">
+
+				<f:facet name="header">
+					<h:outputText value="#{msg['view.flagranteado.principal.list.flagranteado.header']}" />
+				</f:facet>
+
+				<p:ajax event="rowSelect" process="tableVar" update="btSelecionar, btRemover" />
+
+				<p:column headerText="#{msg['entity.flagranteado.nome']}"
+					width="30%">
+					<h:outputText value="#{var.nome}" />
+				</p:column>
+
+				<p:column headerText="#{msg['entity.flagranteado.cpf']}" width="30%">
+					<h:outputText value="#{var.cpfCnpjFormatado}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton icon="fa fa-lg fa-plus-circle"
+						value="#{msg['view.button.new']}"
+						title="#{msg['view.button.new']}" styleClass="btn btn-success"
+						actionListener="#{flagranteadoControl.novo}" process="@this"
+						update=":formCad:dialogForm"
+						oncomplete="dialogForm.show()" />
+
+					<p:commandButton id="btSelecionar" icon="fa fa-lg fa-edit"
+						value="#{msg['view.button.select']}"
+						title="#{msg['view.button.select']}" styleClass="btn"
+						actionListener="#{flagranteadoControl.alterar}" process="@form"
+						update=":formCad:dialogForm"
+						disabled="#{flagranteadoControl.bean.idFlagranteado == null}"
+						oncomplete="dialogForm.show()" />
+
+					<p:commandButton id="btRemover" icon="fa fa-lg fa-minus-circle"
+						value="#{msg['view.button.remove']}"
+						title="#{msg['view.button.remove']}" styleClass="btn btn-danger"
+						actionListener="#{flagranteadoControl.alterar}" process="@form"
+						disabled="#{flagranteadoControl.bean.idFlagranteado==null}"
+						update=":formCad:dialogForm"
+						oncomplete="dialogRemover.show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+
+		<!-- FORM PARA DIALOG CADASTRO -->
+		<h:form id="formCad">
+			<p:dialog id="dialogForm" 
+						widgetVar="dialogForm" 
+						modal="true"
+						closable="true" 
+						draggable="true"
+						header="#{msg['view.flagranteado.principal.dialog.new.header']}">
+
+
+			<p:tabView>
+			<p:tab title="teste1">
+				<p:panel styleClass="contentPanel">
+					<cf:mensagens autoUpdate="true" />
+
+
+				<p:fieldset legend="Informações Básicas"  styleClass="widget row-fluid well" >
+					<h:panelGrid id="gridCadFieldSet" columns="2" columnClasses="textRight,textLeft">
+	
+							<p:outputLabel value="#{msg['entity.flagranteado.nome']}" for="nome" />
+							<p:inputText value="#{flagranteadoControl.bean.nome}" rows="10" style="width: 100%;" autoResize="false" id="nome" required="true" />
+	
+							<p:outputLabel value="#{msg['entity.flagranteado.mae']}" for="nomeMae" />
+							<p:inputText value="#{flagranteadoControl.bean.nomeMae}" rows="10" style="width: 100%;" autoResize="false" id="nomeMae"  required="true"/>
+	
+							<p:outputLabel value="#{msg['entity.flagranteado.cpf']}" for="cpf" />
+							<p:inputMask id="cpf" value="#{flagranteadoControl.bean.cpf}"  mask="999.999.999-99" validator="cpfValidator" converter="maskConverter" required="true"/>
+	
+	
+							<p:outputLabel value="#{msg['entity.flagranteado.nomePai']}" for="nomePai" />
+							<p:inputText value="#{flagranteadoControl.bean.nomePai}" rows="10" style="width: 100%;" autoResize="false" id="nomePai" />
+	
+							<p:outputLabel value="#{msg['entity.flagranteado.dataNascimento']}" for="date" />
+							<p:calendar id="date" locale="pt" navigator="true"
+											pattern="dd/MM/yyyy"
+											value="#{flagranteadoControl.bean.dataNascimento}"
+											style="width: 100%;" autoResize="false"
+											yearRange="c-70:c+10" required="true">
+							</p:calendar>
+				</h:panelGrid>
+			</p:fieldset>
+					
+					<p:fieldset legend="Endereço"  styleClass="widget row-fluid well" >
+						<p:messages globalOnly="false" closable="true" />
+							<h:panelGrid styleClass="grid-login" columns="2" columnClasses="column1,column2,column3">
+								<p:outputLabel value="#{msg['entity.flagranteado.numeroEndereco']}" for="numeroEndereco" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.numero}" rows="10" style="width: 100%;" autoResize="false" id="numeroEndereco" required="true"/>
+		
+								<p:outputLabel value="#{msg['entity.flagranteado.endereco']}" for="endereco" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.logradouro}" rows="10" style="width: 100%;" autoResize="false" id="endereco" required="true"/>
+		
+								<p:outputLabel value="#{msg['entity.flagranteado.complemento']}" for="complemento" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.complemento}" rows="10" style="width: 100%;" autoResize="false" id="complemento" />
+								
+								<p:outputLabel value="#{msg['entity.flagranteado.bairro']}" for="bairro" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.bairro}" rows="10" style="width: 100%;" autoResize="false" id="bairro" required="true" />
+								
+								<p:outputLabel value="#{msg['entity.flagranteado.cidade']}" for="cidade" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.cidade}" rows="10" style="width: 100%;" autoResize="false" id="cidade"  required="true"/>
+								
+								<p:outputLabel value="#{msg['entity.flagranteado.estado']}" for="estado" />
+								<p:inputText value="#{flagranteadoControl.bean.endereco.estado}" rows="10" style="width: 100%;" autoResize="false" id="estado"  required="true"/>
+							</h:panelGrid>
+				   </p:fieldset>
+				    
+				</p:panel>
+				<p:panel styleClass="buttonPanel" id="buttonPanel">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.save']}"
+						title="#{msg['view.button.save']}" styleClass="btn btn-success"
+						actionListener="#{flagranteadoControl.salvar}"
+						update=":formPesquisa"  />
+
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.close']}"
+						title="#{msg['view.button.close']}" styleClass="btn "
+						type="button" onclick="dialogForm.hide()" />
+				</p:panel>
+					</p:tab>
+					<p:tab title="teste2">
+					
+					</p:tab>
+				</p:tabView>
+			</p:dialog>
+		</h:form>
+		<!-- FORM PARA CADASTRO -->
+
+		<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+		<h:form id="formRemover">
+			<p:confirmDialog widgetVar="dialogRemover" id="dialogRemover"
+				message="#{msg['view.dialog.remove.message']}"
+				header="#{msg['view.flagranteado.principal.dialog.remover.header']}"
+				width="230">
+
+				<div align="center">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.yes']}"
+						title="#{msg['view.button.yes']}" styleClass="btn"
+						actionListener="#{flagranteadoControl.remover}" 
+						update=":formPesq" onclick="dialogRemover.hide()" />
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.no']}" title="#{msg['view.button.no']}"
+						styleClass="btn " type="button" onclick="dialogRemover.hide()" />
+				</div>
+			</p:confirmDialog>
+		
+	</h:form>
+		<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+	</ui:define>
+</ui:composition>

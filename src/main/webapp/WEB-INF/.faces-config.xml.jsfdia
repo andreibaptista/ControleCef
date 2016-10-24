@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="seguranca_index::#seg#index.xhtml"
+    NAME="output" PATH="/seg/index.xhtml"
+    TARGET="rules:#seg#index.xhtml" TITLE="seguranca_index" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="guia_principal::#seg#guia#guia-principal.xhtml" NAME="output2"
+    PATH="/seg/guia/guia-principal.xhtml"
+    TARGET="rules:#seg#guia#guia-principal.xhtml" TITLE="guia_principal" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="flagranteado_principal::#seg#flagranteado#flagranteado-principal.xhtml"
+    NAME="output3" PATH="/seg/flagranteado/flagranteado-principal.xhtml"
+    TARGET="rules:#seg#flagranteado#flagranteado-principal.xhtml"
+    TITLE="flagranteado_principal" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="login_index::#login.xhtml" NAME="output9"
+    PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login_index" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#seg#index.xhtml" PATH="/seg/index.xhtml"
+  SHAPE="304,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
+  SHAPE="304,593,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#seg#guia#guia-principal.xhtml"
+  PATH="/seg/guia/guia-principal.xhtml" SHAPE="304,593,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM
+  NAME="rules:#seg#flagranteado#flagranteado-principal.xhtml"
+  PATH="/seg/flagranteado/flagranteado-principal.xhtml"
+  SHAPE="304,593,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

@@ -1,0 +1,10 @@
+package br.stefanini.PROJET_IMPORTS.service;
+
+import java.util.List;
+
+import br.stefanini.PROJET_IMPORTS.model.CLASSE;
+
+public interface CLASSEService extends GenericService<CLASSE, Integer> {
+
+	/*ADICIONAR METODOS ESPECIFICOS DO CASO DE USO*/
+}

@@ -1,0 +1,209 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:cf="http://cf.com.br/tags">
+
+
+	<ui:define name="conteudo">
+
+		<!-- BreadCrumb -->
+		<h:form id="formBreadcrumb">
+			<div class="crumbs">
+				<ul id="breadcrumbs" class="breadcrumb">
+					<li><p:commandLink action="#{redirect.indexSeguranca()}"
+							ajax="false" immediate="true">
+							<h:outputText value="#{msg['view.home']}" />
+						</p:commandLink></li>
+					<li class="active"><p:commandLink ajax="false"
+							immediate="true" style="cursor:default;">
+							<h:outputText value="#{msg['view.usuario.principal']}" />
+						</p:commandLink></li>
+				</ul>
+			</div>
+		</h:form>
+		<!--/BreadCrumb -->
+
+
+
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+		<h:form styleClass="form-horizontal" id="formPesq">
+			<cf:title titleValue="#{msg['view.usuario.principal']}" />
+			<cf:mensagens globalOnly="true" />
+			<p:dataTable id="tableVar" var="var"
+				value="#{usuarioControl.resultList}" paginator="true" rows="10"
+				rowKey="#{var.codigoUsuario}" selection="#{usuarioControl.bean}"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+				selectionMode="single" emptyMessage="#{msg['view.table.empty']}">
+
+				<f:facet name="header">
+					<h:outputText
+						value="#{msg['view.usuario.principal.list.usuario.header']}" />
+				</f:facet>
+
+				<p:ajax event="rowSelect" process="tableVar"
+					update="btSelecionar, btRemover" />
+
+				<p:column headerText="#{msg['entity.usuario.nomeUsuario']}"
+					width="30%">
+					<h:outputText value="#{var.nomeUsuario}" />
+				</p:column>
+
+				<p:column headerText="#{msg['entity.usuario.cpf']}" width="30%">
+					<h:outputText value="#{var.cpf}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton icon="fa fa-lg fa-plus-circle"
+						value="#{msg['view.button.new']}"
+						title="#{msg['view.button.new']}" styleClass="btn btn-success"
+						actionListener="#{usuarioControl.novo}" process="@this"
+						update=":formCad:dialogForm" oncomplete="dialogForm.show()" />
+
+					<p:commandButton id="btSelecionar" icon="fa fa-lg fa-edit"
+						value="#{msg['view.button.select']}"
+						title="#{msg['view.button.select']}" styleClass="btn"
+						actionListener="#{usuarioControl.alterar}" process="@form"
+						update=":formCad:dialogForm"
+						disabled="#{usuarioControl.bean.codigoUsuario == null}"
+						oncomplete="dialogForm.show()" />
+
+					<p:commandButton id="btRemover" icon="fa fa-lg fa-minus-circle"
+						value="#{msg['view.button.remove']}"
+						title="#{msg['view.button.remove']}" styleClass="btn btn-danger"
+						actionListener="#{usuarioControl.alterar}" process="@form"
+						disabled="#{usuarioControl.bean.codigoUsuario==null}"
+						update=":formCad:dialogForm" oncomplete="dialogRemover.show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+
+		<!-- FORM PARA DIALOG CADASTRO -->
+		<h:form id="formCad">
+			<p:dialog id="dialogForm" widgetVar="dialogForm" modal="true"
+				closable="true" draggable="true"
+				header="#{msg['view.usuario.principal.dialog.new.header']}">
+
+				<p:panel styleClass="contentPanel">
+					<cf:mensagens autoUpdate="true" />
+
+
+					<p:fieldset legend="Informações Básicas"
+						styleClass="widget row-fluid well">
+						<h:panelGrid id="gridCadFieldSet" columns="2"
+							columnClasses="textRight,textLeft">
+
+							<p:outputLabel value="#{msg['entity.usuario.numeroMatricula']}"
+								for="numeroMatricula" />
+							<p:inputText value="#{usuarioControl.bean.numeroMatricula}"
+								rows="10" style="width: 100%;" autoResize="false"
+								id="numeroMatricula" required="true" />
+
+
+							<p:outputLabel value="#{msg['entity.usuario.nomeUsuario']}"
+								for="nomeUsuario" />
+							<p:inputText value="#{usuarioControl.bean.nomeUsuario}" rows="10"
+								style="width: 100%;" autoResize="false" id="nomeUsuario"
+								required="true" />
+
+							<p:outputLabel value="#{msg['entity.usuario.cpf']}" for="cpf" />
+							<p:inputMask id="cpf" value="#{usuarioControl.bean.cpf}"
+								mask="999.999.999-99" validator="cpfValidator"
+								converter="maskConverter" required="true" />
+
+							<p:outputLabel value="#{msg['entity.usuario.dataNascimento']}"
+								for="date" />
+							<p:calendar id="date" locale="pt" navigator="true"
+								pattern="dd/MM/yyyy"
+								value="#{usuarioControl.bean.datanascimento}"
+								style="width: 100%;" autoResize="false" yearRange="c-70:c+10"
+								required="true">
+							</p:calendar>
+
+							<p:outputLabel value="#{msg['entity.usuario.dsFuncao']}"
+								for="dsFuncao" />
+							<p:inputText value="#{usuarioControl.bean.dsFuncao}" rows="10"
+								style="width: 100%;" autoResize="false" id="dsFuncao" />
+
+
+						</h:panelGrid>
+					</p:fieldset>
+
+					<p:fieldset legend="Informações administrativas"
+						styleClass="widget row-fluid well">
+						<p:messages globalOnly="false" closable="true" />
+						<h:panelGrid styleClass="grid-login" columns="2"
+							columnClasses="column1,column2,column3">
+
+							<p:outputLabel value="#{msg['entity.usuario.descricaoLogin']}"
+								for="descricaoLogin" />
+							<p:inputText value="#{usuarioControl.bean.descricaoLogin}"
+								rows="10" style="width: 100%;" autoResize="false"
+								id="descricaoLogin" required="true" />
+
+							<p:outputLabel value="#{msg['entity.usuario.senha']}" for="senha" />
+							<p:inputText value="#{usuarioControl.bean.senha}" rows="10"
+								style="width: 100%;" autoResize="false" id="senha"
+								required="true" />
+
+							<p:outputLabel
+								value="#{msg['entity.usuario.descricaoEnderecoEmail']}"
+								for="descricaoEnderecoEmail" />
+							<p:inputText
+								value="#{usuarioControl.bean.descricaoEnderecoEmail}" rows="10"
+								style="width: 100%;" autoResize="false"
+								id="descricaoEnderecoEmail" required="true" />
+
+							<p:outputLabel value="#{msg['entity.usuario.numeroTelefone']}"
+								for="numeroTelefone" />
+							<p:inputText value="#{usuarioControl.bean.numeroTelefone}"
+								rows="10" style="width: 100%;" autoResize="false"
+								id="numeroTelefone" required="true" />
+
+						</h:panelGrid>
+					</p:fieldset>
+
+				</p:panel>
+				<p:panel styleClass="buttonPanel" id="buttonPanel">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.save']}"
+						title="#{msg['view.button.save']}" styleClass="btn btn-success"
+						actionListener="#{usuarioControl.salvar}" process="@form" />
+
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.close']}"
+						title="#{msg['view.button.close']}" styleClass="btn "
+						type="button" onclick="dialogForm.hide()" />
+				</p:panel>
+			</p:dialog>
+		</h:form>
+		<!-- FORM PARA CADASTRO -->
+
+		<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+		<h:form id="formRemover">
+			<p:confirmDialog widgetVar="dialogRemover" id="dialogRemover"
+				message="#{msg['view.dialog.remove.message']}"
+				header="#{msg['view.usuario.principal.dialog.remover.header']}"
+				width="230">
+
+				<div align="center">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.yes']}"
+						title="#{msg['view.button.yes']}" styleClass="btn"
+						actionListener="#{usuarioControl.remover}" update=":formPesq"
+						onclick="dialogRemover.hide()" />
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.no']}" title="#{msg['view.button.no']}"
+						styleClass="btn " type="button" onclick="dialogRemover.hide()" />
+				</div>
+			</p:confirmDialog>
+
+		</h:form>
+		<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+	</ui:define>
+</ui:composition>

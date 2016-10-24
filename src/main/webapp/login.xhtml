@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cf="http://cf.com.br/tags">
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=9" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title><h:outputText value="#{msg['app.name']}" /></title>
+	</f:facet>
+	<ui:include src="/WEB-INF/template/header.xhtml" />
+	<h:outputScript name="client-detect.js" library="js" />
+</h:head>
+<!-- Desabilitando o background padrão da aplicação -->
+<h:body style="background-image:none;">
+
+	
+
+	<!-- Necessário para que o theme.css possa sobreescrever os demais css -->
+	<f:facet name="last">
+		<h:outputStylesheet name="theme.css" library="css" />
+	</f:facet>
+	<!-- Definindo a div TOP -->
+	<h:form prependId="false">
+		<div id="top">
+			<div class="fixed">
+				<p:commandLink action="#{redirect.login()}" styleClass="logo">
+				<h:graphicImage library="images" name="logo.png" /> 
+				</p:commandLink>
+			</div>
+		</div>
+	</h:form>
+	<!-- /div top -->
+
+	<!-- Definindo a Div Login -->
+	<div id="container" style="width: 50%; margin: 10px auto; min-width: 650px;">
+		<cf:title titleValue="#{msg['view.login.title']}" />
+		<!-- Div responsável pelo texto inicial -->
+		<div class="login-text"></div>
+		<!-- /div texto inicial -->
+
+		<!-- Content -->
+		<div class=" widget"
+			style="min-width: 650px;">
+			<h:form id="loginForm" prependId="false" styleClass="form-horizontal"  >
+				<p:fieldset styleClass="widget row-fluid well" style="padding:20px auto;min-width:650px;">
+					<p:messages globalOnly="false" closable="true" />
+						<h:panelGrid styleClass="grid-login" columns="2" columnClasses="column1,column2,column3">
+							<p:outputLabel value="Usuário: "  />
+							<p:inputText id="usuario" value="#{loginControl.nomeUsuario}" styleClass="input-medium" required="true" />
+	
+							<p:outputLabel value="Senha: " />
+							<p:password id="senha" value="#{loginControl.senha}" styleClass="input-medium" required="true" />
+						</h:panelGrid>
+				</p:fieldset>
+				<p:panel styleClass="buttonPanel"
+					style="clear:both;display:block;min-width:630px;">
+					<p:commandButton id="btLogin" icon="fa fa-lg fa-sign-in"
+						value="#{msg['view.login.button.signin']}"
+						title="#{msg['view.login.button.signin']}"
+						styleClass="btn btn-primary" ajax="false"
+						action="#{loginControl.login}" />
+
+					<p:defaultCommand target="btLogin" />
+				</p:panel>
+			</h:form>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /div Login -->
+	<br />
+	<!-- Footer -->
+	<div id="footer" style="display: block; clear: both;">
+		<div class="copyrights">
+			<h:outputText
+				value="#{msg['app.client']} - #{msg['app.name']} - #{msg['project.version']}" />
+		</div>
+	</div>
+	<!-- /footer -->
+</h:body>
+</html>
+

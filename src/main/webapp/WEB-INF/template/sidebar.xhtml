@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:component>
+
+	<!-- Sidebar -->
+	<h:form>
+		<div id="sidebar" style="margin-top: -2%;">
+
+			<div class="sidebar-tabs">
+				<ul class="tabs-nav two-items" style="display: none;">
+					<li><a href="#general" title=""><i class="icon-reorder"></i></a></li>
+					<li><a href="#stuff" title=""><i class="icon-cogs"></i></a></li>
+				</ul>
+
+				<div id="general">
+					<!-- Main navigation -->
+					<ul class="navigation widget">
+						<li class="header" style="border-bottom: 2px solid #FC0; width: 118%; margin-left: -9%;"><a
+							style="cursor: default;">
+								<div style="width: 100%; text-align: center;">
+									<h:outputText
+										value="#{msg['view.template.sidebar.menu.header']}" />
+								</div>
+						</a></li>
+						<ui:repeat var="item" value="#{menuControl.menuLateral}">
+							<li><p:commandLink action="#{item.goToUrl}"
+								ajax="false" styleClass="expand">
+								
+								<h:outputText value="#{item.nmFun}" />
+							</p:commandLink></li>
+						</ui:repeat>
+						<li class="active"
+							style="border-top: 2px solid #FC0; height: 10px; background: #034;"></li>
+					</ul>
+					<!-- /main navigation -->
+
+				</div>
+			</div>
+		</div>
+		<!-- /sidebar -->
+	</h:form>
+</ui:component>
+</html>

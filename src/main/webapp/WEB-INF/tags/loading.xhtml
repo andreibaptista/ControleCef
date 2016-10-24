@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+	<ui:composition>
+
+		<p:ajaxStatus onstart="showStatusDialog();"
+			onsuccess="hideStatusDialog();" onerror="showErrorDialog();" />
+
+		<p:dialog styleClass="loading-dialog" widgetVar="statusDialog"
+			id="statusDlg" width="auto" modal="true" closable="false"
+			draggable="false" resizable="false" showHeader="false">
+			<h:panelGrid columns="2"
+				columnClasses="loading-dialog-column,loading-dialog-column">
+				<!-- <h:graphicImage library="images" name="icons/TJRR.jpg" /> -->
+				<h:outputText value="#{msg['label.ajax.loading']}" />
+			</h:panelGrid>
+
+			<h:graphicImage library="images" name="loading.gif" />
+		</p:dialog>
+
+		<p:dialog widgetVar="errorDialog" id="errorDlg" width="auto"
+			modal="true" closable="true" draggable="true" resizable="false"
+			showHeader="true" closeOnEscape="true"
+			header="#{msg['message.alert']}">
+			<h:outputText value="#{msg['message.ajax.error']}" />
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:component>
+	<h:form id="formTopo">
+		<div id="top">
+			<div class="fixed">
+				<p:commandLink action="#{redirect.indexSeguranca()}" >
+					<!-- styleClass="logo" -->
+
+				</p:commandLink>
+				<span
+					style="color: #fff; margin: 12px 0 0; display: inline-block; font-size: 14px;">
+					Controle Cef </span>
+				<p:commandLink action="#{redirect.indexSeguranca()}" >
+					<!-- styleClass="logoLeft"> -->
+
+				</p:commandLink>
+				<ul class="top-menu">
+					<li><a class="fullview"></a></li>
+					<li><a class="showmenu"></a></li>
+					<li><h:outputLink styleClass="help"
+							title="#{msg['label.help']}" target="_blank"
+							value="/seg/manual-flagranteados.pdf" /></li>
+					<li class="dropdown"><a class="user-menu"
+						data-toggle="dropdown"><i class="login-top"
+							style="color: #FFF;"></i><span><h:outputText
+									value="#{msg['view.template.topo.menu.admin']}" /><b
+								class="caret"></b></span></a>
+						<ul class="dropdown-menu">
+							<ui:repeat var="item" value="#{menuControl.menuAdministrativo}">
+								<li><p:commandLink action="#{item.goToUrl}" ajax="false">
+										<i class="fa fa-lg fa-users"></i>
+										<h:outputText
+											value="#{msg['view.template.topo.menu.usuario']}" />
+									</p:commandLink></li>
+							</ui:repeat>						
+								
+							<li><p:commandLink action="#{loginControl.logout}">
+									<i class="fa fa-lg fa-sign-out"></i>
+									<h:outputText value="#{msg['view.template.topo.menu.logout']}" />
+								</p:commandLink></li>
+						</ul></li>
+
+				</ul>
+			</div>
+		</div>
+	</h:form>
+</ui:component>
+</html>

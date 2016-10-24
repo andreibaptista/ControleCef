@@ -1,0 +1,422 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:cf="http://cf.com.br/tags">
+
+
+	<ui:define name="conteudo">
+		<!-- BreadCrumb -->
+		<h:form id="formBreadcrumb">
+			<div class="crumbs">
+				<ul id="breadcrumbs" class="breadcrumb">
+					<li><p:commandLink action="#{redirect.indexSeguranca()}"
+							ajax="false" immediate="true">
+							<h:outputText value="#{msg['view.home']}" />
+						</p:commandLink></li>
+					<li class="active"><p:commandLink ajax="false"
+							immediate="true" style="cursor:default;">
+							<h:outputText value="#{msg['view.empresa.principal']}" />
+						</p:commandLink></li>
+				</ul>
+			</div>
+		</h:form>
+		<!--/BreadCrumb -->
+
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+		<h:form styleClass="form-horizontal" id="formPesqempresa">
+			<cf:title titleValue="#{msg['view.empresa.principal']}" />
+			<cf:mensagens globalOnly="true" />
+
+			<p:dataTable id="tableempresaEncaminhamento" var="empresaEncaminhamento"
+				value="#{empresaControl.resultList}" paginator="true" rows="10"
+				rowKey="#{empresaEncaminhamento.idEmpresa}"
+				selection="#{empresaControl.bean}"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+				selectionMode="single" emptyMessage="#{msg['view.table.empty']}">
+
+				<f:facet name="header">
+					<h:outputText
+						value="#{msg['view.empresa.principal.list.empresa.header']}" />
+				</f:facet>
+
+				<p:ajax event="rowSelect" process="tableempresaEncaminhamento"
+					update="btSelecionar, btRemover" />
+
+				<p:column headerText="#{msg['entity.empresa.nmempresa']}" width="30%">
+					<h:outputText value="#{empresaEncaminhamento.nome}" />
+				</p:column>
+
+				<p:column headerText="#{msg['entity.empresa.dsempresa']}" width="30%">
+					<h:outputText value="#{empresaEncaminhamento.observacoes}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton icon="fa fa-lg fa-plus-circle"
+						value="#{msg['view.button.new']}"
+						title="#{msg['view.button.new']}" styleClass="btn btn-success"
+						actionListener="#{empresaControl.novo}" process="@this"
+						update=":formCadempresa:dialogForm, tableempresaEncaminhamento"
+						oncomplete="dialogForm.show()" />
+					<p:commandButton id="btSelecionar" icon="fa fa-lg fa-edit"
+						value="#{msg['view.button.select']}"
+						title="#{msg['view.button.select']}" styleClass="btn"
+						actionListener="#{empresaControl.alterar}" process="@form"
+						update=":formCadempresa:dialogForm"
+						disabled="#{empresaControl.bean.idEmpresa==null}"
+						oncomplete="dialogForm.show()" />
+
+
+					<p:commandButton id="btRemover" icon="fa fa-lg fa-minus-circle"
+						value="#{msg['view.button.remove']}"
+						title="#{msg['view.button.remove']}" styleClass="btn btn-danger"
+						actionListener="#{empresaControl.alterar}" process="@form"
+						disabled="#{empresaControl.bean.idEmpresa==null}"
+						update=":formCadempresa:dialogForm, tableempresaEncaminhamento"
+						oncomplete="dialogRemover.show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+
+		<!-- FORM PARA DIALOG CADASTRO -->
+
+
+		<h:form id="formCadempresa">
+			<p:dialog id="dialogForm" widgetVar="dialogForm" modal="true"
+				resizable="false" width="50%" position="top" showEffect="fade"
+				height="720" hideEffect="fade" closable="true" draggable="true"
+				header="#{msg['view.empresa.principal.dialog.new.header']}">
+
+				<p:panel styleClass="contentPanel">
+
+					<cf:mensagens autoUpdate="true" />
+					<p:accordionPanel>
+						<p:tab title="Informações preeliminares" showDetail="true">
+							<p:fieldset styleClass="widget row-fluid well">
+								<h:panelGrid id="gridempresa" columns="2"
+									columnClasses="textRight,textLeft">
+
+									<p:outputLabel value="#{msg['entity.empresa.nprocesso']}"
+										for="numeroProcesso" />
+									<p:inputText value="#{empresaControl.bean.numeroProcesso}"
+										rows="10" style="width: 100%;" autoResize="false"
+										id="numeroProcesso" />
+
+									<p:outputLabel value="#{msg['entity.empresa.nmempresa']}"
+										for="flagranteado" />
+									<p:autoComplete id="flagranteado" minQueryLength="1"
+										value="#{empresaControl.bean.nome}"
+										completeMethod="#{flagranteadoControl.buscarPorNome}" />
+
+
+									<h:outputText value="#{msg['entity.empresa.atendimentoPrevio']}" />
+									<p:selectOneRadio id="atendimentoPrevio"
+										value="#{empresaControl.bean.atendimentoPrevio}">
+										<f:selectItem itemLabel="Sim" itemValue="Sim" />
+										<f:selectItem itemLabel="Não" itemValue="Não" />
+									</p:selectOneRadio>
+
+									<p:outputLabel value="#{msg['entity.empresa.tipoTratamentoCB']}"
+										for="tipoTratamentoCB" />
+									<p:selectOneMenu id="tipoTratamentoCB"
+										value="#{empresaControl.bean.tipoTratamentoCB}"
+										style="width:185px">
+										<!-- requiredMessage="Tipo de tratamento é obrigatório"> -->
+										<f:selectItem itemLabel="Atendimento Clínico"
+											itemValue="ATENDIMENTO_CLINICO" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{msg['entity.empresa.dataInicio']}"
+										for="dataInicio" />
+									<p:calendar id="dataInicio" locale="pt" pattern="dd/MM/yyyy"
+										navigator="true" value="#{empresaControl.bean.dataInicio}"
+										style="width: 100%;" autoResize="false" yearRange="c-70:c+10" />
+
+									<p:outputLabel for="localTratamento"
+										value="Local do tratamento" />
+									<p:autoComplete id="localTratamento" minQueryLength="3"
+										value="#{empresaControl.bean.localTratamento}"
+										completeMethod="#{localTratamentoControl.buscarPorNomeLocalTratamento}" />
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:panel styleClass="buttonPanel"
+								id="buttonPanelInformacoesPreeliminares">
+								<p:commandButton icon="fa fa-lg fa-check"
+									value="#{msg['view.button.save']}"
+									title="#{msg['view.button.save']}" styleClass="btn btn-success"
+									actionListener="#{empresaControl.salvar}" process="@form" />
+							</p:panel>
+
+						</p:tab>
+
+						<p:tab title="Informações do Flagranteado">
+							<p:fieldset legend="Informações Básicas"
+								styleClass="widget row-fluid well">
+								<h:panelGrid id="gridCadFieldSet" columns="2"
+									columnClasses="textRight,textLeft">
+
+									<p:outputLabel value="#{msg['entity.flagranteado.alcunha']}"
+										for="alcunha" />
+									<p:inputText value="#{flagranteadoControl.bean.alcunha}"
+										rows="10" style="width: 100%;" autoResize="false" id="alcunha" />
+
+									<p:outputLabel value="#{msg['entity.flagranteado.nome']}"
+										for="nome" />
+									<p:inputText value="#{flagranteadoControl.bean.nome}" rows="10"
+										style="width: 100%;" autoResize="false" id="nome" />
+
+
+									<p:outputLabel value="#{msg['entity.flagranteado.mae']}"
+										for="nomeMae" />
+									<p:inputText value="#{flagranteadoControl.bean.nomeMae}"
+										rows="10" style="width: 100%;" autoResize="false" id="nomeMae" />
+
+
+									<p:outputLabel value="#{msg['entity.flagranteado.nomePai']}"
+										for="nomePai" />
+									<p:inputText value="#{flagranteadoControl.bean.nomePai}"
+										rows="10" style="width: 100%;" autoResize="false" id="nomePai" />
+
+									<p:outputLabel value="#{msg['entity.flagranteado.rg']}"
+										for="cpf" />
+									<p:inputMask id="cpf" value="#{flagranteadoControl.bean.rg}" />
+
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset legend="Endereço" styleClass="widget row-fluid well">
+								<p:messages globalOnly="false" closable="true" />
+								<h:panelGrid styleClass="grid-login" columns="2"
+									columnClasses="column1,column2,column3">
+
+									<p:outputLabel value="#{msg['entity.flagranteado.cep']}"
+										for="cep" />
+									<p:inputText value="#{flagranteadoControl.bean.endereco.cep}"
+										rows="10" style="width: 100%;" autoResize="false" id="cep" />
+
+
+									<p:outputLabel
+										value="#{msg['entity.flagranteado.numeroEndereco']}"
+										for="numeroEndereco" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.numero}" rows="10"
+										style="width: 100%;" autoResize="false" id="numeroEndereco"
+										readonly="false" />
+
+
+									<p:outputLabel value="#{msg['entity.flagranteado.logradouro']}"
+										for="logradouro" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.logradouro}"
+										rows="10" style="width: 100%;" autoResize="false"
+										id="logradouro" />
+
+
+									<p:outputLabel
+										value="#{msg['entity.flagranteado.complemento']}"
+										for="complemento" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.complemento}"
+										rows="10" style="width: 100%;" autoResize="false"
+										id="complemento" />
+
+									<p:outputLabel value="#{msg['entity.flagranteado.bairro']}"
+										for="bairro" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.bairro}" rows="10"
+										style="width: 100%;" autoResize="false" id="bairro" />
+
+
+									<p:outputLabel value="#{msg['entity.flagranteado.cidade']}"
+										for="cidade" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.cidade}" rows="10"
+										style="width: 100%;" autoResize="false" id="cidade" />
+
+
+									<p:outputLabel value="#{msg['entity.flagranteado.estado']}"
+										for="estado" />
+									<p:inputText
+										value="#{flagranteadoControl.bean.endereco.estado}" rows="10"
+										style="width: 100%;" autoResize="false" id="estado" />
+
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:fieldset legend="Anexar Documentação"
+								styleClass="widget row-fluid well">
+								<h:form styleClass="form-horizontal" id="formPesqFlagranteados">
+
+
+									<p:outputLabel value="#{msg['entity.documento.laudo']}"
+										for="documento" />
+									<p:fileUpload id="documento" value="#{fileUploadView.file}"
+										mode="simple" skinSimple="true" />
+
+								</h:form>
+							</p:fieldset>
+
+
+							<p:dataTable id="tableVar" var="var"
+								value="#{flagranteadoControl.resultList}" rows="10"
+								rowKey="#{var.idFlagranteado}"
+								selection="#{flagranteadoControl.bean}" selectionMode="single"
+								emptyMessage="#{msg['view.table.empty']}">
+								<f:facet name="header">
+									<h:outputText
+										value="#{msg['view.flagranteado.principal.list.flagranteado.header']}" />
+								</f:facet>
+								<p:column headerText="#{msg['entity.flagranteado.nome']}"
+									width="30%">
+									<h:outputText value="#{var.nome}" />
+								</p:column>
+							</p:dataTable>
+
+							<p:fieldset styleClass="widget row-fluid well">
+								<p:commandButton icon="fa fa-lg fa-check"
+									value="#{msg['view.button.save']}"
+									title="#{msg['view.button.save']}" styleClass="btn btn-success"
+									actionListener="#{flagranteadoControl.salvar}" />
+
+								<p:commandButton icon="fa fa-lg fa-times"
+									value="#{msg['view.button.close']}"
+									title="#{msg['view.button.close']}" styleClass="btn "
+									type="button" onclick="dialogForm.hide()" />
+							</p:fieldset>
+
+						</p:tab>
+
+						<p:tab title="Adicionar Acompanhamento">
+							<p:fieldset styleClass="widget row-fluid well">
+								<h:panelGrid id="gridCadAcompanhamento" columns="2"
+									columnClasses="textRight,textLeft">
+									<p:outputLabel
+										value="#{msg['entity.documento.tipoacompanhamento']}"
+										for="tipoAcompanhamento" />
+									<p:selectOneMenu id="tipoAcompanhamento"
+										value="#{documentoControl.bean.tipoAcompanhamento}"
+										style="width:2010px">
+										<!-- requiredMessage="Tipo de tratamento é obrigatório"> -->
+										<f:selectItem itemLabel="Acompanhamento Assistente Social"
+											itemValue="AcompanhamentoAssistenteSocial" />
+									</p:selectOneMenu>
+
+									<p:outputLabel
+										value="#{msg['entity.documento.graudependencia']}"
+										for="grauDependencia" />
+									<p:selectOneMenu id="grauDependencia"
+										value="#{documentoControl.bean.grauDependencia}">
+										<f:selectItem itemLabel="1" itemValue="1" />
+										<f:selectItem itemLabel="2" itemValue="2" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{msg['entity.documento.anotacao']}"
+										for="anotacao" />
+									<p:inputTextarea value="#{documentoControl.bean.anotacao}"
+										autoResize="false" rows="10" cols="40" id="anotacao" />
+
+								</h:panelGrid>
+							</p:fieldset>
+							
+							<p:fieldset legend="Anexar Documentação"
+								styleClass="widget row-fluid well">
+								<h:form styleClass="form-horizontal" id="formPesqFlagranteadoss">
+
+
+									<p:outputLabel value="#{msg['entity.documento.laudo']}"
+										for="laudo" />
+									<p:fileUpload id="laudo" value="#"
+										mode="simple" skinSimple="true" />
+
+								</h:form>
+							</p:fieldset>
+
+							<p:fieldset styleClass="widget row-fluid well">
+
+								<p:commandButton icon="fa fa-lg fa-check"
+									value="#{msg['view.button.save']}"
+									title="#{msg['view.button.save']}" styleClass="btn btn-success"
+									actionListener="#{documentoControl.salvar}" process="@form" />
+								<p:commandButton icon="fa fa-lg fa-times"
+									value="#{msg['view.button.close']}"
+									title="#{msg['view.button.close']}" styleClass="btn "
+									type="button" onclick="dialogForm.hide()" />
+
+							</p:fieldset>
+
+
+
+							<p:fieldset styleClass="widget row-fluid well">
+
+								<p:dataTable id="tableAcompanhamento" var="acompanhamento"
+									value="#{documentoControl.resultList}" rows="10"
+									rowKey="#{documento.iddocumento}"
+									selection="#{documentoControl.bean}"
+									currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+									selectionMode="single"
+									emptyMessage="#{msg['view.table.empty']}">
+
+									<f:facet name="header">
+										<h:outputText
+											value="#{msg['view.empresa.principal.list.documento.headeracompanhamento']}" />
+									</f:facet>
+
+									<p:column headerText="#{msg['entity.empresa.tipoacompanhamento']}"
+										width="30%">
+										<h:outputText value="#{documento.tipoacompanhamento}" />
+									</p:column>
+
+									<p:column headerText="#{msg['entity.empresa.graudependencia']}"
+										width="30%">
+										<h:outputText value="#{documento.graudependencia}" />
+									</p:column>
+
+									<p:column headerText="#{msg['entity.empresa.anotacao']}"
+										width="30%">
+										<h:outputText value="#{documento.anotacao}" />
+									</p:column>
+
+									<f:facet name="footer">
+
+									</f:facet>
+								</p:dataTable>
+
+							</p:fieldset>
+
+						</p:tab>
+
+
+					</p:accordionPanel>
+				</p:panel>
+
+
+			</p:dialog>
+
+		</h:form>
+
+		<h:form id="formRemoverempresa">
+			<p:confirmDialog widgetVar="dialogRemover" id="dialogRemover"
+				message="#{msg['view.dialog.remove.message']}"
+				header="#{msg['view.empresa.principal.dialog.remover.header']}"
+				width="230">
+				<div align="center">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.yes']}"
+						title="#{msg['view.button.yes']}" styleClass="btn"
+						actionListener="#{empresaControl.remover()}" process="@this"
+						onclick="dialogRemover.hide()" update=":formPesqempresa" />
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.no']}" title="#{msg['view.button.no']}"
+						styleClass="btn " type="button" onclick="dialogRemover.hide()" />
+				</div>
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

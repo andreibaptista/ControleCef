@@ -1,0 +1,179 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:cf="http://cf.com.br/tags">
+
+	<ui:define name="conteudo">
+		<!-- BreadCrumb -->
+		<h:form id="formBreadcrumb">
+			<div class="crumbs">
+				<ul id="breadcrumbs" class="breadcrumb">
+					<li><p:commandLink action="#{redirect.indexSeguranca()}"
+							ajax="false" immediate="true">
+							<h:outputText value="#{msg['view.home']}" />
+						</p:commandLink></li>
+					<li class="active"><p:commandLink ajax="false"
+							immediate="true" style="cursor:default;">
+							<h:outputText value="#{msg['view.guia.principal']}" />
+						</p:commandLink></li>
+				</ul>
+			</div>
+		</h:form>
+		<!--/BreadCrumb -->
+
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+		<h:form styleClass="form-horizontal" id="formPesqGuia">
+			<cf:title titleValue="#{msg['view.guia.principal']}" />
+			<cf:mensagens globalOnly="true" />
+
+			<p:dataTable id="tableGuiaEncaminhamento" var="guiaEncaminhamento"
+				value="#{guiaControl.resultList}" paginator="true" rows="10"
+				rowKey="#{guiaEncaminhamento.idencaminhamento}"
+				selection="#{guiaControl.bean}"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+				selectionMode="single" emptyMessage="#{msg['view.table.empty']}">
+
+				<f:facet name="header">
+					<h:outputText
+						value="#{msg['view.guia.principal.list.guia.header']}" />
+				</f:facet>
+
+				<p:ajax event="rowSelect" process="tableGuiaEncaminhamento"
+					update="btSelecionar, btRemover" />
+
+				<p:column headerText="#{msg['entity.guia.nmguia']}" width="30%">
+					<h:outputText value="#{guiaEncaminhamento.nome}" />
+				</p:column>
+
+				<p:column headerText="#{msg['entity.guia.dsguia']}" width="30%">
+					<h:outputText value="#{guiaEncaminhamento.observacoes}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton icon="fa fa-lg fa-plus-circle"
+						value="#{msg['view.button.new']}"
+						title="#{msg['view.button.new']}" styleClass="btn btn-success"
+						actionListener="#{guiaControl.novo}" process="@this"
+						update=":formCadGuia:dialogForm, tableGuiaEncaminhamento"
+						oncomplete="dialogForm.show()" />
+					<p:commandButton id="btSelecionar" icon="fa fa-lg fa-edit"
+						value="#{msg['view.button.select']}"
+						title="#{msg['view.button.select']}" styleClass="btn"
+						actionListener="#{guiaControl.alterar}" process="@form"
+						update=":formCadGuia:dialogForm"
+						disabled="#{guiaControl.bean.idencaminhamento==null}"
+						oncomplete="dialogForm.show()" />
+
+
+					<p:commandButton id="btRemover" icon="fa fa-lg fa-minus-circle"
+						value="#{msg['view.button.remove']}"
+						title="#{msg['view.button.remove']}" styleClass="btn btn-danger"
+						actionListener="#{guiaControl.alterar}" process="@form"
+						disabled="#{guiaControl.bean.idencaminhamento==null}"
+						update=":formCadGuia:dialogForm, tableGuiaEncaminhamento"
+						oncomplete="dialogRemover.show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+
+		<!-- FORM PARA DIALOG CADASTRO -->
+
+
+		<h:form id="formCadGuia">
+			<p:dialog id="dialogForm" widgetVar="dialogForm" modal="true"
+				resizable="false" width="50%" position="top" showEffect="fade"
+				height="720" hideEffect="fade" closable="true" draggable="true"
+				header="#{msg['view.guia.principal.dialog.new.header']}">
+
+				<p:panel styleClass="contentPanel">
+
+					<cf:mensagens autoUpdate="true" />
+					<p:accordionPanel>
+						<p:tab title="Informações preeliminares" showDetail="true">
+							<p:fieldset styleClass="widget row-fluid well">
+								<h:panelGrid id="gridGuia" columns="2"
+									columnClasses="textRight,textLeft">
+
+									<p:outputLabel value="#{msg['entity.guia.nprocesso']}"
+										for="numeroProcesso" />
+									<p:inputText value="#{guiaControl.bean.numeroProcesso}"
+										rows="10" style="width: 100%;" autoResize="false"
+										id="numeroProcesso" />
+
+									<p:outputLabel value="#{msg['entity.guia.nmguia']}"
+										for="flagranteado" />
+									<p:autoComplete id="flagranteado" minQueryLength="1"
+										value="#{guiaControl.bean.nome}"
+										completeMethod="#{flagranteadoControl.buscarPorNome}" />
+
+
+									<h:outputText value="#{msg['entity.guia.atendimentoPrevio']}" />
+									<p:selectOneRadio id="atendimentoPrevio"
+										value="#{guiaControl.bean.atendimentoPrevio}">
+										<f:selectItem itemLabel="Sim" itemValue="Sim" />
+										<f:selectItem itemLabel="Não" itemValue="Não" />
+									</p:selectOneRadio>
+
+									<p:outputLabel value="#{msg['entity.guia.tipoTratamentoCB']}"
+										for="tipoTratamentoCB" />
+									<p:selectOneMenu id="tipoTratamentoCB"
+										value="#{guiaControl.bean.tipoTratamentoCB}"
+										style="width:185px">
+										<!-- requiredMessage="Tipo de tratamento é obrigatório"> -->
+										<f:selectItem itemLabel="Atendimento Clínico"
+											itemValue="ATENDIMENTO_CLINICO" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="#{msg['entity.guia.dataInicio']}"
+										for="dataInicio" />
+									<p:calendar id="dataInicio" locale="pt" pattern="dd/MM/yyyy"
+										navigator="true" value="#{guiaControl.bean.dataInicio}"
+										style="width: 100%;" autoResize="false" yearRange="c-70:c+10" />
+
+									<p:outputLabel for="localTratamento"
+										value="Local do tratamento" />
+									<p:autoComplete id="localTratamento" minQueryLength="3"
+										value="#{guiaControl.bean.localTratamento}"
+										completeMethod="#{localTratamentoControl.buscarPorNomeLocalTratamento}" />
+								</h:panelGrid>
+							</p:fieldset>
+
+							<p:panel styleClass="buttonPanel"
+								id="buttonPanelInformacoesPreeliminares">
+								<p:commandButton icon="fa fa-lg fa-check"
+									value="#{msg['view.button.save']}"
+									title="#{msg['view.button.save']}" styleClass="btn btn-success"
+									actionListener="#{guiaControl.salvar}" process="@form" />
+							</p:panel>
+						</p:tab>
+					</p:accordionPanel>
+				</p:panel>
+			</p:dialog>
+		</h:form>
+
+		<h:form id="formRemoverGuia">
+			<p:confirmDialog widgetVar="dialogRemover" id="dialogRemover"
+				message="#{msg['view.dialog.remove.message']}"
+				header="#{msg['view.guia.principal.dialog.remover.header']}"
+				width="230">
+				<div align="center">
+					<p:commandButton icon="fa fa-lg fa-check"
+						value="#{msg['view.button.yes']}"
+						title="#{msg['view.button.yes']}" styleClass="btn"
+						actionListener="#{guiaControl.remover()}" process="@this"
+						onclick="dialogRemover.hide()" update=":formPesqGuia" />
+					<p:commandButton icon="fa fa-lg fa-times"
+						value="#{msg['view.button.no']}" title="#{msg['view.button.no']}"
+						styleClass="btn " type="button" onclick="dialogRemover.hide()" />
+				</div>
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

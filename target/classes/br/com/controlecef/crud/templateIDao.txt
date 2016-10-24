@@ -1,0 +1,12 @@
+package br.stefanini.PROJET_IMPORTS.dao;
+
+import java.util.List;
+
+import br.stefanini.PROJET_IMPORTS.dao.util.GenericDao;
+import br.stefanini.PROJET_IMPORTS.model.CLASSE;
+
+public interface CLASSEDao extends GenericDao<CLASSE, Integer> {
+
+	public List<Flagranteado> findAll();
+	/*preencher com metodos especificos do caso de uso*/	
+}

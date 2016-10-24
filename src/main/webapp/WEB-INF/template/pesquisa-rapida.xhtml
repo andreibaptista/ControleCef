@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:component>
+	<!-- Pesquisa Rápida -->
+			    <div class="actions-wrapper" style="border-top:none;display:none">
+				    <!-- Search widget -->
+                    <h:form styleClass="search widget" style="border:none;margin:0px;">
+                       <p:autoComplete id="acSimple" value="#{autoCompleteBean.search}"   
+                    					completeMethod="#{autoCompleteBean.complete}" queryDelay="800" />
+                         <p:commandButton type="submit" action="#{autoCompleteBean.redirect()}" styleClass="btn btn-info" value="Ir" style="height:34px;padding:2px 5px;"/>
+                    </h:form>
+                    <!-- /search widget -->
+				</div>
+	<!-- /action tabs -->
+</ui:component>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cf="http://cf.com.br/tags">
+<h:head>
+	<ui:include src="/WEB-INF/template/header.xhtml" />
+</h:head>
+<!-- Desabilitando o background padrão da aplicação -->
+<h:body style="background-image:none;">
+	<!-- Necessário para que o theme.css possa sobreescrever os demais css -->
+	<f:facet name="last">
+		<h:outputStylesheet name="theme.css" library="css" />
+	</f:facet>
+	<!-- Definindo a div TOP -->
+	<div id="top">
+		<div class="fixed">
+			<a href="/seg/index.html" title="" class="logo"> <h:graphicImage
+					library="images" name="logo.png" />
+			</a>
+		</div>
+	</div>
+	<!-- /div top -->
+
+	<!-- div module -->
+	<div class="menu-modules"></div>
+	<!-- /div module -->
+
+	<div style="width: 50%; margin: 10px auto; min-width: 650px;">
+		<cf:title titleValue="Acesso Negado" />
+		<!-- Div responsável pelo texto inicial -->
+		<div>
+			<div
+				style="padding: 2px 5px; float: left; max-width: 70%; min-width: 70%; width: 70%; text-align: justify;">
+				<p>Você não possui permissão para acessar o conteúdo solicitado.</p>
+			</div>
+			<div style="padding: 22px 5px; float: right; margin: auto 30px;">
+				<h:graphicImage library="images" name="cadeado.png" />
+			</div>
+		</div>
+		<!-- /div texto inicial -->
+
+	</div>
+	<br />
+	<!-- Footer -->
+	<div id="footer" style="display: block; clear: both;">
+		<div class="copyrights"><h:outputText value="#{msg['app.client']} - #{msg['app.name']} - #{msg['project.version']}" /></div>
+	</div>
+	<!-- /footer -->
+</h:body>
+</html>
+

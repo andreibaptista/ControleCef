@@ -1,0 +1,37 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:cf="http://cf.com.br/tags">
+
+	<ui:define name="conteudo">
+		<script type="text/javascript">
+        function showSearch() {
+			$('.actions-wrapper').slideToggle(100);
+        }
+        window.onload = showSearch;
+        </script>
+
+		<div class="widget" style="padding: 10px;">
+			<cf:title
+				titleValue="#{msg['view.index.title']} #{loginControl.currentUser.nomeUsuario}" />
+			<p>
+			<h:outputText value="#{msg['view.index.lastaccess.null']}"
+					rendered="#{loginControl.currentUser.dataUltimaVisita == null}" />
+				<h:outputText value="#{msg['view.index.lastaccess']}"
+					rendered="#{loginControl.currentUser.dataUltimaVisita != null}" />
+				<h:outputText value="#{loginControl.currentUser.dataUltimaVisita}"
+					rendered="#{loginControl.currentUser.dataUltimaVisita != null}">
+					<f:convertDateTime locale="pt_BR" type="date" dateStyle="long" />
+				</h:outputText>
+				<h:outputText value="#{msg['view.index.lastaccess.time']}"
+					rendered="#{loginControl.currentUser.dataUltimaVisita != null}" />
+				<h:outputText value="#{loginControl.currentUser.dataUltimaVisita}"
+					rendered="#{loginControl.currentUser.dataUltimaVisita != null}">
+					<f:convertDateTime locale="pt_BR" type="time" dateStyle="medium" />
+				</h:outputText>
+			</p>
+		</div>
+	</ui:define>
+</ui:composition>

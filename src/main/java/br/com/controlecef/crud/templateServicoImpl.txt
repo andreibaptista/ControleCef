@@ -1,0 +1,40 @@
+package br.stefanini.PROJET_IMPORTS.service;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
+import br.stefanini.PROJET_IMPORTS.dao.CLASSEDao;
+import br.stefanini.PROJET_IMPORTS.dao.util.Parametros;
+import br.stefanini.PROJET_IMPORTS.model.CLASSE;
+
+@Stateless
+public class CLASSEServiceImpl implements CLASSEService {
+
+	@Inject
+	private CLASSEDao VARIAVELDao;
+
+	@Override
+	public CLASSE findByPk(Integer id) {
+		return VARIAVELDao.find(CLASSE.class, id);
+	}
+
+	@Override
+	public void save(CLASSE VARIAVEL) {
+		if (VARIAVEL != null && VARIAVEL.getCodigoCLASSE() != null
+				&& VARIAVEL.getCodigoCLASSE() > 0) {
+			VARIAVELDao.merge(VARIAVEL);
+		} else {
+			VARIAVELDao.save(VARIAVEL);
+		}
+	}
+
+	@Override
+	public void remove(CLASSE VARIAVEL) {
+		if (VARIAVEL != null) {
+			VARIAVELDao.delete(VARIAVEL, VARIAVEL.getCodigoCLASSE());
+		}
+	}
+
+}

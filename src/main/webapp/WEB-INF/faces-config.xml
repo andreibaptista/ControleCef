@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://java.sun.com/xml/ns/javaee
+        http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+	<application>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+		</locale-config>
+
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		
+		<message-bundle>messages</message-bundle>
+	</application>
+
+	<!-- Navegacao Global -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<!-- Pagina principal do modulo de segurança -->
+		<navigation-case>
+			<from-outcome>seguranca_index</from-outcome>
+			<to-view-id>/seg/index.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Pagina principal do modulo de guia -->
+		<navigation-case>
+			<from-outcome>guia_principal</from-outcome>
+			<to-view-id>/seg/guia/guia-principal.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Pagina principal do modulo de Flagranteado -->
+		<navigation-case>
+			<from-outcome>flagranteado_principal</from-outcome>
+			<to-view-id>/seg/flagranteado/flagranteado-principal.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<!-- Pagina de autenticacao -->
+		<navigation-case>
+			<from-outcome>login_index</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		</navigation-rule>
+</faces-config>

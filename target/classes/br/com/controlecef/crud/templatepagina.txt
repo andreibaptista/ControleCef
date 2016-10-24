@@ -1,0 +1,150 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:cf="http://cf.com.br/tags">
+
+	<ui:define name="conteudo">
+		<!-- BreadCrumb -->
+		<h:form id="formBreadcrumb">
+			<div class="crumbs">
+				<ul id="breadcrumbs" class="breadcrumb">
+					<li>
+						<p:commandLink action="#{redirect.indexSeguranca()}" ajax="false" immediate="true">
+							<h:outputText value="#{msg['view.home']}" />
+						</p:commandLink>
+					</li>
+					<li class="active">
+						<p:commandLink ajax="false" immediate="true" style="cursor:default;">
+							<h:outputText value="#{msg['view.VARIAVEL.principal']}" />
+						</p:commandLink>
+					</li>
+				</ul>
+			</div>
+		</h:form>
+		<!--/BreadCrumb -->
+		
+		
+		<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+		<h:form styleClass="form-horizontal" id="formPesq">
+			<cf:title titleValue="#{msg['view.VARIAVEL.principal']}" />
+			<cf:mensagens globalOnly="true" />
+
+			<p:dataTable id="tableVar" var="var"
+						value="#{VARIAVELControl.resultList}" paginator="true" rows="10"
+						rowKey="#{var.idVARIAVEL}"
+						selection="#{VARIAVELControl.bean}"
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+						currentPageReportTemplate="#{msg['view.table.currentPageReportTemplate']}"
+						selectionMode="single" emptyMessage="#{msg['view.table.empty']}">
+
+				<f:facet name="header">
+					<h:outputText value="#{msg['view.VARIAVEL.principal.list.VARIAVEL.header']}" />
+				</f:facet>
+
+				<p:ajax event="rowSelect" process="tableVar" update="btSelecionar, btRemover" />
+
+				<p:column headerText="#{msg['entity.VARIAVEL.DEFINIR_MESSAGES']}" width="30%">
+					<h:outputText value="#{var.CAMPO_DO_OBJETO}" />
+				</p:column>
+
+				<p:column headerText="#{msg['entity.VARIAVEL.DEFINIR_MESSAGES']}" width="30%">
+					<h:outputText value="#{var.CAMPO_DO_OBJETO}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton icon="fa fa-lg fa-plus-circle"
+						value="#{msg['view.button.new']}"
+						title="#{msg['view.button.new']}" styleClass="btn btn-success"
+						actionListener="#{VARIAVELControl.novo}" 
+						process="@this"
+						update=":formCad:dialogForm, tableVar"
+						oncomplete="dialogForm.show()" />
+					
+					<p:commandButton id="btSelecionar" icon="fa fa-lg fa-edit"
+						value="#{msg['view.button.select']}"
+						title="#{msg['view.button.select']}" styleClass="btn"
+						actionListener="#{VARIAVELControl.alterar}" process="@form"
+						update=":formCad:dialogForm"
+						disabled="#{VARIAVELControl.bean.idVARIAVEL == null}"
+						oncomplete="dialogForm.show()" />
+					
+					<p:commandButton id="btRemover" icon="fa fa-lg fa-minus-circle"
+						value="#{msg['view.button.remove']}"
+						title="#{msg['view.button.remove']}" styleClass="btn btn-danger"
+						actionListener="#{VARIAVELControl.alterar}" 
+						process="@form"
+						disabled="#{VARIAVELControl.bean.idVARIAVEL==null}"
+						update=":formCad:dialogForm, tableVar"
+						oncomplete="dialogRemover.show()" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	<!-- FORM ONDE SE ENCONTRA DATATABLE -->
+
+
+	<!-- FORM PARA DIALOG CADASTRO -->
+	 <h:form id="formCad">
+			<p:dialog id="dialogForm" 
+						widgetVar="dialogForm" 
+						modal="true" 
+						closable="true" 
+						draggable="true" 
+						header="#{msg['view.VARIAVEL.principal.dialog.new.header']}">
+	
+				<p:panel styleClass="contentPanel">
+					<cf:mensagens autoUpdate="true" />
+
+					<h:panelGrid id="gridCad" columns="2" columnClasses="textRight,textLeft">
+					
+						
+						
+					</h:panelGrid>
+				</p:panel>
+				<p:panel styleClass="buttonPanel" id="buttonPanel">
+					<p:commandButton icon="fa fa-lg fa-check"
+										value="#{msg['view.button.save']}"
+										title="#{msg['view.button.save']}" styleClass="btn btn-success"
+										actionListener="#{VARIAVELControl.salvar}" process="@form" />
+					
+					<p:commandButton icon="fa fa-lg fa-times"
+										value="#{msg['view.button.close']}"
+										title="#{msg['view.button.close']}" styleClass="btn "
+										type="button" onclick="dialogForm.hide()" />
+				</p:panel>
+			</p:dialog>
+		</h:form> 
+	<!-- FORM PARA CADASTRO -->
+
+	<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+		<h:form id="formRemover">
+			<p:confirmDialog widgetVar="dialogRemover" 
+							id="dialogRemover"
+							message="#{msg['view.dialog.remove.message']}"
+							header="#{msg['view.VARIAVEL.principal.dialog.remover.header']}"
+							width="230">
+							
+				<div align="center">
+					<p:commandButton icon="fa fa-lg fa-check"
+										value="#{msg['view.button.yes']}"
+										title="#{msg['view.button.yes']}" styleClass="btn"
+										actionListener="#{VARIAVELControl.remover}" 
+										process="@this"
+										update=":formPesq"
+										onclick="dialogRemover.hide()" />
+					<p:commandButton icon="fa fa-lg fa-times"
+										value="#{msg['view.button.no']}" 
+										title="#{msg['view.button.no']}"
+										styleClass="btn " 
+										type="button" 
+										onclick="dialogRemover.hide()" />
+				</div>
+			</p:confirmDialog>
+		</h:form>
+		
+		<!-- FORM DIALOG PARA CONFIRMAR REMOÇÃO -->
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,29 @@
+package br.stefanini.PROJET_IMPORTS.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
+
+import br.stefanini.PROJET_IMPORTS.dao.util.GenericDaoImpl;
+import br.stefanini.PROJET_IMPORTS.dao.util.Parametros;
+import br.stefanini.PROJET_IMPORTS.model.CLASSE;
+
+public class CLASSEDaoImpl extends GenericDaoImpl<CLASSE, Integer> implements
+		CLASSEDao {
+
+	private static final long serialVersionUID = 1L;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CLASSE> listaCLASSE() {
+		Query query = em.createNamedQuery("CLASSE.findAll");
+		return query.getResultList();
+	}
+
+	@Override
+	public boolean isRelatadedToPermissao(Integer cdCLASSE) {
+		return super.count("CLASSE.countPermissoes", new Parametros<Integer>(
+				"cdCLASSE", cdCLASSE)) > 0;
+	}
+
+}

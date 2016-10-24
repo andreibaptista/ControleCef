@@ -1,0 +1,58 @@
+package br.stefanini.PROJET_IMPORTS.control;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import org.primefaces.context.RequestContext;
+
+import br.stefanini.PROJET_IMPORTS.control.util.NavigationConstant;
+import br.stefanini.PROJET_IMPORTS.model.CLASSE;
+import br.stefanini.PROJET_IMPORTS.service.CLASSEService;
+
+@ManagedBean(name = "VARIAVELControl")
+@ViewScoped
+public class CLASSEControl extends AbstractControl<CLASSE, Integer, CLASSEService> {
+
+	@EJB
+	private CLASSEService VARIAVELService;
+	
+	
+
+	@PostConstruct
+	public void init() {
+		setService(VARIAVELService);
+		novo();
+	}
+
+	@Override
+	public String principal() {
+		return NavigationConstant.URL_ACAO_PRINCIPAL;
+	}
+
+	@Override
+	public void novo() {
+		setBean(new CLASSE());
+	}
+
+	@Override
+	public CLASSE load() {
+		if (getBean() != null) {
+			return getService().findByPk(getBean().getCodigoCLASSE());
+		}
+		return null;
+	}
+	
+	@Override
+	public void salvar(){
+		super.salvar();
+		RequestContext.getCurrentInstance().execute("dialogFormCLASSE.hide()");
+		RequestContext.getCurrentInstance().update("formPesqCLASSE");
+	}
+
+	@Override
+	public void remover() {
+		super.remover();
+	}
+}
